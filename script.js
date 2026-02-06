@@ -5,6 +5,13 @@ class HashMap {
     this.buckets = new Array(capacity).fill(null);
   }
 
+  getBucket(key) {
+    let hashCode = this.hash(key);
+    if (!this.buckets[hashCode]) return; //check for existence of bucket
+    return this.buckets[hashCode];
+  }
+
+
   hash(key) {
     if (typeof(key) !== 'string') throw new Error('Input needs to be a string!');
     let hashCode = 0;
@@ -39,13 +46,23 @@ class HashMap {
   }
 
   get(key) {
-    let hashCode = this.hash(key);
-    if (!this.buckets[hashCode]) return;
-    let bucket = this.buckets[hashCode];
+    let bucket = this.getBucket(key);
+    if (!bucket) return null;
 
     for (let entry of bucket) {
       if (entry[0] === key) return entry[1];
     }
+    return null;
+  }
+
+  has(key) {
+    let bucket = this.getBucket(key);
+    if (!bucket) return false;
+
+    for (let entry of bucket) {
+      if (entry[0] === key) return true;
+    }
+    return false;
   }
 
 }
